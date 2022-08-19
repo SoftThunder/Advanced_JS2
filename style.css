@@ -1,0 +1,25 @@
+.top-header{
+display: flex; 
+justify-content: space-between;
+align-items: center;
+background-color:orangered;
+padding: 5px;
+}
+.btn-cart{
+    width: 70px;
+    height: 30px;
+}
+.products{
+    display: flex;
+}
+.product-item {
+    min-width: 300px;
+    max-height: 500px;
+    margin: 10px;
+    background-color: gray;
+}
+.img-product {
+    padding: 5px;
+    width: 300px;
+    height: 300px;
+}
