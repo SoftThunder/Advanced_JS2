@@ -18,3 +18,25 @@ const renderPage = list => {
 };
 
 renderPage(products);
+
+getSumPrice() {
+    let s = 0;
+    this.products.forEach(item => {
+        s += item.price;
+    });
+}
+
+class Basket {
+    addGood() {
+
+    }
+    deleteGood() {
+
+    }
+    ordergood() {
+
+    }
+    renderGood() {
+
+    }
+}
