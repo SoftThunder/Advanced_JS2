@@ -1,13 +1,14 @@
 class ProductsList{
-    constructor (container = '.products')
+    constructor (container = '.products'){
     this.container = container;
     this.goods = [];
     this.getProducts()
                 .then(data => {
-                    this/goods = [...data];
+                    this.goods = [...data];
                     this.render()
                 });
-}
+            }
+
 
 _getProducts() {
     return fetch ('${API}/catalogData.json')
@@ -25,7 +26,7 @@ render () {
 
 }
 }
-
+}
 class ProductItem {
     constructor(product) {
         this.title = product.product_name;
@@ -60,7 +61,7 @@ class Basket {
     _getBasketItem() {
         return fetch (`${API}/getBasket.json`)
             .then(result => result.json())
-            catch(error => {
+            .catch(error => {
                 console.log(error);
             })
     }
