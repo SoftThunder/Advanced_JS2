@@ -1,32 +1,81 @@
-const products = [
-    { id: 1, title: 'Toyota', price: 2000, img: 'src = img/toyota.jpg' },
-    { id: 2, title: 'Skoda', price: 2000, img: 'src = img/skoda.jpg' },
-    { id: 1, title: 'Mazda', price: 2000, img: 'src = img/mazda.jpg' },
-    { id: 1, title: 'Volkswagen', price: 2000, img: 'src = img/volkswagen.jpg' },
-];
-const renderProduct = (title, price, img) => {
-    return `<div class="product-item">
-       <div ><img class="img-product" ${img} alt=""> </div>
-        <h3>${title}</h3>
-        <p>${price}</p>
-        <button class="buy-btn">Купить</button>
-    </div>`
-};
-const renderPage = list => {
-    const productsList = list.map(item => renderProduct(item.title, item.price, item.img));
-    document.querySelector('.products').innerHTML = productsList.join('');
-};
-
-renderPage(products);
-
-getSumPrice() {
-    let s = 0;
-    this.products.forEach(item => {
-        s += item.price;
-    });
+class ProductsList{
+    constructor (container = '.products')
+    this.container = container;
+    this.goods = [];
+    this.getProducts()
+                .then(data => {
+                    this/goods = [...data];
+                    this.render()
+                });
 }
 
+_getProducts() {
+    return fetch ('${API}/catalogData.json')
+        .then(result => result.json())
+        .catch(error => {
+            console.log(error);
+        })
+}
+
+render () {
+    const block = document.querySelector(this.container);
+    for (let product of this.goods){
+        const productObj = new ProductItem(product);
+        block.insertAdjacentHTML('beforeend', productObj.render());
+
+}
+}
+
+class ProductItem {
+    constructor(product) {
+        this.title = product.product_name;
+        this.price = product.price;
+        this.id = product.id_product;
+        this.img = img;
+
+    }
+    render (){
+        return `<div class="product-item" data-id = "${this.id}">
+       <div ><img class="img-product" ${this.img} alt=""> </div>
+        <h3>${this.title}</h3>
+        <p>${this.price}</p>
+        <button class="buy-btn">Купить</button>
+    </div>`
+    }
+}
+
+let list = new ProductsList();
+
 class Basket {
+    constructor (container = '.cart-block'){
+        this.container = container;
+        this.goods = [];
+        this._clickBasket();
+        this.getBasketItem()
+            .then(data => {
+                this.goods = data.contents;
+                this.render();
+            });
+    }
+    _getBasketItem() {
+        return fetch (`${API}/getBasket.json`)
+            .then(result => result.json())
+            catch(error => {
+                console.log(error);
+            })
+    }
+    render(){
+        const block = document/querySelector(this.container);
+        for (let product of this.goods){
+            const productObj = new getBasketItem();
+            block.insertAdjacentHTML('beforeend', productObj.render(product));
+        }
+    }
+    _clickBasket(){
+        document.querySelector(".btn-cart").addEventListener('click', () => {
+            document.querySelector(this.container).classList.toggle('invisible');
+        });
+    }
     addGood() {
 
     }
@@ -40,3 +89,12 @@ class Basket {
 
     }
 }
+
+
+getSumPrice() {
+    let s = 0;
+    this.goods.forEach(item => {
+        s += item.price;
+    });
+}
+
