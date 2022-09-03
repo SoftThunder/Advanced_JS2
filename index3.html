@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    .error-msg{
+        color: brown;
+        margin: 10px 0;
+    }
+    .invalid {
+        border: 2px solid red;
+    }
+     .valid {
+        border: 2px solid green;
+     }
+</style>
+</head>
+
+<body>
+    <form action="#" class="valid-form" id="valid-form">
+        <div>
+            <label>
+                Input name<br>
+                <input type="text" name="name" id="name">
+            </label>
+        </div>
+        <div>
+            <label>
+                Input phone<br>
+                <input type="tel"  name="phone" id="phone">
+
+            </label>
+        </div>
+        <div>
+            <label>
+                Input e-mail<br>
+                <input type="email" name="email" id="email">
+            </label>
+        </div>
+        <button id="sub-btn">Submit</button>
+    </form>
+<script src ="valid.js"></script>
+<script>
+    window.onload = () => {
+        document.getElementById('valid-form').addEventListener('submit', event => {
+            let valid = new Validator('valid-form');
+            if (!valid.valid){
+                event.preventDefault();
+            }
+        })
+    }
+</script>
+</body>
+
+</html>
