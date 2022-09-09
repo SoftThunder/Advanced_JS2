@@ -1,114 +1,76 @@
 const API = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
-class ProductsList {
-    constructor(container = '.products') {
-        this.container = container;
-        this.goods = [];
-        this._getProducts()
-            .then(data => {
-                this.goods = [...data];
-                this.render()
-            });
-    }
 
-
-    _getProducts() {
-        return fetch(`${API}/catalogData.json`)
+const app = new Vue ({
+    el: '#app',
+    data: {
+        userSearch: '',
+        showCart: false,
+        catalogUrl: '/catalogData.json',
+        cartUrl: '/getBasket.json',
+        cartItems: [],
+        filtered: [],
+        imgCart:'https://via.placeholder.com/140x100',
+        products: [],
+        imgProduct:'http://memesmix.net/media/created/840ucf.jpg'
+    },
+    methods: {
+        getJson(url){
+            return fetch(url)
             .then(result => result.json())
-            .catch(error => {
-                console.log(error);
+            .catch(error => console.log(error))
+        },
+        addProduct(item){
+            this.getJson(`${API}/addToBasket.json`)
+            .then(data => {
+                if(data.result === 1){
+                    let find = this.cartItems.find(el =>el.id_product=== 
+                        item.id_product);
+                        if(find){
+                            find.quantity++;
+                        } else {
+                            const prod = Object.assign({quantity: 1}, item);
+                            this.cart.push(prod)
+                        }
+                }
             })
-    }
-
-    render() {
-        const block = document.querySelector(this.container);
-        for (let product of this.goods) {
-            const productObj = new ProductItem(product);
-            block.insertAdjacentHTML('beforeend', productObj.render());
-
+        },
+        remove(item){
+            this.getJson(`${API}/deleteFromBasket.json`)
+            .then(data => {
+                if (data.result === 1){
+                    if (item.quantity>1){
+                        item.quantity--;
+                    } else {
+                        this.cartItems.splice(this.cartItems.indexOf(item), 1);
+                    }
+                }
+            })
+        },
+        filter () {
+            let regexp = new RegExp(this.userSearch, 'i');
+            this.filtered = this.products.filter(el => regexp.test(el.product_name));
         }
     }
-}
-class ProductItem {
-    constructor(product, img = 'https://sun9-47.userapi.com/impf/c850020/v850020353/f2696/IJEXbuiIKtg.jpg?size=453x0&quality=95&sign=bb1352f3aa1e1d1c0cb4f85d907d4ad8') {
-        this.title = product.product_name;
-        this.price = product.price;
-        this.id = product.id_product;
-        this.img = img;
-
-    }
-    render() {
-        return `<div class="product-item" data-id = "${this.id}">
-       <div ><img class="img-product" ${this.img} alt=""> </div>
-        <h3>${this.title}</h3>
-        <p>${this.price}</p>
-        <button class="buy-btn">Купить</button>
-    </div>`
-    }
-}
-
-let list = new ProductsList();
-
-class Basket {
-    constructor(container = '.cart-block') {
-        this.container = container;
-        this.goods = [];
-        this._clickBasket();
-        this._getBasketItem()
-            .then(data => {
-                this.goods = data.contents;
-                this.render();
-            });
-    }
-    _getBasketItem() {
-        return fetch(`${API}/getBasket.json`)
-            .then(result => result.json())
-            .catch(error => {
-                console.log(error);
-            })
-    }
-    render() {
-        const block = document.querySelector(this.container);
-        for (let product of this.goods) {
-            const productObj = new BasketItem();
-            block.insertAdjacentHTML('beforeend', productObj.render(product));
-        }
-    }
-    _clickBasket() {
-        document.querySelector(".btn-cart").addEventListener('click', () => {
-            document.querySelector(this.container).classList.toggle('invisible');
+    ,mounted(){
+    this.getJson(`${API + this.cartUrl}`)
+        .then(data => {
+            for (let item of data.contents){
+                this.cartItems.push(item);
+            }
         });
-    }
-    addGood() {
-
-    }
-    deleteGood() {
-
-    }
-    ordergood() {
-
-    }
-    renderGood() {
-
-    }
+        this.getJson(`${API + this.catalogUrl}`)
+        .then(data => {
+            for (let item of data){
+                this.$data.products.push(item);
+                this.$data.filtered.push(item);
+            }
+        });
+        this.getJson(`${API + this.cartUrl}`)
+        .then(data => {
+            for (let item of data){
+                this.products.push(item);
+                this.filtered.push(item);
+            }
+        });
 }
-
-class BasketItem {
-    render(product, img = 'https://sstmarket.com/_sh/00/8.jpg') {
-        return `<div class ="cart-item" data-id= "${product.id_product}">
-        
-                <img class= "img-cart-item" src = "${img}">
-                <div class= "product-desc">
-                <p class="product-title">${product.product_name}</p>
-                <p class="product-quantity"> Quantity: ${product.quantity}</p>
-                <p class= "product-single-price">${product.price} each </p>
-                </div>
-                </div>
-                <div class="right-block">
-                    <p class="product-price">${product.quantity * product.price}</p>
-                    <button class= "del-btn" data-id = "${product.id_product}">X</button>
-                    </div>
-                    </div>`
-    }
-}
-
-new Basket();
+})

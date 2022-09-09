@@ -1,45 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <!DOCTYPE html>
-    <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+ <div id= "app"> 
+    <header>
+ <div class="logo">MultiShop</div>
+        <div class="cart">
+            <search></search>
+            <button class="btn-cart" type="button" @click="showCart = !showCart">
+                Корзина
+            </button>
+            <div class="cart-block" v-show="showCart">
+                <p v-if="!cartItems.length">Корзина пуста</p>
+                <div class="cart-item" v-for="item of cartItems" :key="item.id_product">
+                    <div class="product-bio">
+                        <img :src="imgCart" alt="Some img">
+                        <div class="product-desc">
+                            <div class="product-title">{{item.product_name}}</div>
+                            <div class="product-quantity">Quantity: {{item.quantity}} </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-      
-    </head>
-    
-    <body>
-        <p id="text">
-            One: 'Hi Mary.' Two: 'Oh, hi.'
-            One: 'How are you doing?'
-            Two: 'I'm doing alright. How about you?'
-            One: 'Not too bad. The weather is great isn't it?'
-            Two: 'Yes. It's absolutely beautiful today.'
-            One: 'I wish it was like this more frequently.'
-            Two: 'Me too.'
-            One: 'So where are you going now?'
-            Two: 'I'm going to meet a friend of mine at the department store.'
-            One: 'Going to do a little shopping?'
-            Two: 'Yeah, I have to buy some presents for my parents.'
-            One: 'What's the occasion?'
-            Two: 'It's their anniversary.'
-            One: 'That's great. Well, you better get going. You don't want to be late.'
-            Two: 'I'll see you next time.'
-            One: 'Sure. Bye.'
-        </p>
-        <button id="change"> Change</button>
-        <script>
-            let dialog = document.getElementById('text');
-            document.getElementById('change').addEventListener('click', () => {
-             
-                 dialog.textContent = dialog.textContent.replace(/\B'|B/g,'"');
-            })
-        </script>
-    </body>
-    
-    </html>
+    </header>
+    <main>
+        <div class="products">
+            <div class="product-item" v-for="product of filtered" :key="product.id_product">
+                <img :src="imgProduct" alt="фото товара">
+                <div class="desc">
+                    <h3> {{product.product_name}} </h3>
+                    <p>{{product.price}}</p>
+                    <button class="buy-btn" @click="addProduct(product)">Купить</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="search.js"></script>
+    <script src="main.js"></script>
+</body>
+
 </html>
